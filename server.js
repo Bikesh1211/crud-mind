@@ -9,9 +9,11 @@ connectDB();
 
 app.use(express.json());
 app.get('/',(req,res)=>{
-    res.send('API is running...');
+    res.send('Server is running...');
 })
 app.use('/api/auth', authRoutes);
 
 const PORT = 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>{
+    console.log(`Server running on port http://localhost:${PORT}`)
+} );

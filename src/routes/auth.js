@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.json({ token });
+    res.json({ token,userName:user.name });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -55,23 +55,23 @@ router.post("/forgot-password", async (req, res) => {
     user.resetToken = resetToken;
     await user.save();
 
-    // const transporter = nodemailer.createTransport({
-    //   service: 'gmail',
-    //   auth: {
-    //     user: process.env.EMAIL_USER,
-    //     pass: process.env.EMAIL_PASS,
-    //   },
-    // });
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-    // const mailOptions = {
-    //   from: process.env.EMAIL_USER,
-    //   to: email,
-    //   subject: 'Password Reset',
-    //   html: `<p>Click <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}">here</a> to reset your password.</p>`,
-    // };
-    // await transporter.sendMail(mailOptions);
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset',
+      html: `<p>Click <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}">here</a> to reset your password.</p>`,
+    };
+    await transporter.sendMail(mailOptions);
     console.log({
-      email: `${process.env.CLIENT_URL}/reset-password/${resetToken}`,
+      email: `${process.env.CLIENT_URL}/reset-password.html?${resetToken}`,
     });
 
     res.json({ message: "Password reset email sent" });

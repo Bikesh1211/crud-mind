@@ -22,7 +22,7 @@ document.getElementById('resetPasswordForm').addEventListener('submit', async (e
       console.log('Password reset response:', response);
     } catch (error) {
       console.error('Error resetting password:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to reset password.';
+      const errorMessage ='Failed to reset password.';
       document.getElementById('responseMessage').innerHTML = `
         <div class="alert alert-danger">${errorMessage}</div>
       `;

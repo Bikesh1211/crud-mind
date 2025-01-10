@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-    res.json({ token,userName:user.name });
+    res.json({ token, userName: user.name });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -56,7 +56,9 @@ router.post("/forgot-password", async (req, res) => {
     await user.save();
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: "smtp.gmail.com",
+      secure: true,
+      port: 465,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -66,8 +68,8 @@ router.post("/forgot-password", async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Password Reset',
-      html: `<p>Click <a href="${process.env.CLIENT_URL}/reset-password/${resetToken}">here</a> to reset your password.</p>`,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${process.env.CLIENT_URL}/reset-password.html?${resetToken}">here</a> to reset your password.</p>`,
     };
     await transporter.sendMail(mailOptions);
     console.log({
@@ -99,15 +101,13 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-router.get('/users', async (req, res) => {
-    try {
-      const users = await User.find().select('-password -resetToken');
-      res.json(users);
-    } catch (err) {
-      res.status(500).json({ message: 'Server error' });
-    }
-  });
-  
-
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find().select("-password -resetToken");
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;

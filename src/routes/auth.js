@@ -110,4 +110,11 @@ router.get("/users", async (req, res) => {
   }
 });
 
+router.get('/findById', async (req,res)=>{
+  try {
+    res.json({message:"All Users"})
+  } catch (error) {
+    
+  }
+})
 module.exports = router;
